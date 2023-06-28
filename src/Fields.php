@@ -66,7 +66,7 @@ final class Fields implements Registerable {
 	}
 
 	public function register_google_place_id_field(): void {
-		if ( self::GOOGLE_PLACE_ID !== self::get_google_place_id() ) {
+		if ( self::GOOGLE_PLACE_ID !== self::get_google_place_id_key() ) {
 			return;
 		}
 
