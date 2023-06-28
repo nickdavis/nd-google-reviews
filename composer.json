@@ -1,7 +1,7 @@
 {
   "name": "nickdavis/nd-google-reviews",
   "description": "WordPress plugin to add Google Reviews to any WordPress post type",
-  "type": "wordpress-muplugin",
+  "type": "wordpress-plugin",
   "version": "1.0.0",
   "minimum-stability": "stable",
   "license": "MIT",
