@@ -1,6 +1,10 @@
 # ND Google Reviews
 
-WordPress plugin to add Google Reviews to any post type. Also adds the total number of reviews and average rating. This plugin is designed for developers who want to use as a basis for their own projects and does not include any default view or styling. An example view will be later.
+WordPress plugin to add Google Reviews to any post type. Also adds the total number of reviews and average rating.
+
+This plugin is designed for developers who want to use as a basis for their own projects and does not include any default view or styling. An example view will be added later.
+
+**No support will be provided by the developer.**
 
 ## Installation
 
@@ -13,14 +17,17 @@ WordPress plugin to add Google Reviews to any post type. Also adds the total num
 - Pulls the last five Google Reviews per post only.
 - The import process may time out (fail) if you have a large number of posts to import reviews for.
 
-*No support will be provided by the developer.*
-
 ## TODO
 - [ ] Add a default(?) / example view as a starting point for developers
 - [ ] Set ability to hide reviews with a score of less than four stars (currently on by default)
 - [ ] Allow more fine-tuning of the ACF location settings for the post fields, e.g. to show for some pages, but not all
 
 ## Changelog
+
+### 1.0.1 (2023-06-28)
+- fix: wrong function ref. breaking meta box
+- fix: reviews not showing on front end
+- fix: set as wordpress-plugin, not mu-plugin
 
 ### 1.0.0 (2023-06-28)
 First version of the plugin without a default / example view.
