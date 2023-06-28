@@ -70,7 +70,7 @@ final class View implements Registerable {
 			return [];
 		}
 
-		if ( $args['rating'] < 4 ) {
+		if ( $args['rating']->rounded() < 4 ) {
 			return [];
 		}
 
