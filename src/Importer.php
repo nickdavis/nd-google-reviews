@@ -71,7 +71,7 @@ final class Importer implements Registerable {
 		// First get all posts that have never been updated.
 		$post_ids = new \WP_Query( [
 			'post_type'              => $post_types,
-			'posts_per_page'         => 500,
+			'posts_per_page'         => 250,
 			'meta_query'             => [
 				'relation' => 'AND',
 				[
@@ -105,7 +105,7 @@ final class Importer implements Registerable {
 			 */
 			$post_ids = new \WP_Query( [
 				'post_type'              => $post_types,
-				'posts_per_page'         => 500,
+				'posts_per_page'         => 250,
 				'meta_key'               => 'nd_google_reviews_last_updated',
 				'orderby'                => 'meta_value_num',
 				'meta_query'             => [
