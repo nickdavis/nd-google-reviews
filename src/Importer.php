@@ -206,6 +206,11 @@ final class Importer implements Registerable {
 
 		// Response status will be 'OK', if able to geocode given address.
 		if ( 'OK' !== $resp['status'] ) {
+			// TODO: Save this error message to the post meta.
+			if ( str_contains( $resp['error_message' ], 'The provided Place ID is no longer valid' ) ) {
+				return [];
+			}
+
 			return [ 'error_message' => 'Import failed. Message from Google: ' . $resp['error_message'] ];
 		}
 
