@@ -17,6 +17,7 @@ final class Fields implements Registerable {
 	private const GOOGLE_PLACE_ID = 'nd_google_place_id';
 
 	public const KEY = 'nd_google_reviews';
+	public const LAST_UPDATED = self::KEY . '_last_updated';
 	public const RATING = self::KEY . '_rating';
 	public const REVIEWS = self::KEY . '_reviews';
 	public const REVIEWS_TOTAL = self::KEY . '_user_ratings_total';
@@ -105,6 +106,15 @@ final class Fields implements Registerable {
 			'key'                   => 'group_nd_google_reviews',
 			'title'                 => 'Google Reviews',
 			'fields'                => array(
+				array(
+					'key'            => 'field_'. self::LAST_UPDATED,
+					'label'          => 'Last Updated',
+					'name'           => self::LAST_UPDATED,
+					'type'           => 'date_picker',
+					'display_format' => 'd/m/Y', // The format displayed in the admin
+					'return_format'  => 'U', // Unix timestamp
+					'readonly'       => 1,
+				),
 				array(
 					'key'      => 'field_' . self::RATING,
 					'label'    => 'Rating',

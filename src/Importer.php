@@ -66,14 +66,29 @@ final class Importer implements Registerable {
 			return;
 		}
 
-		// WP_Query of all post types (IDs only) with non-empty Google Place ID field.
+		$update_type = 'new';
+
+		// First get all posts that have never been updated.
 		$post_ids = new \WP_Query( [
 			'post_type'              => $post_types,
-			'posts_per_page'         => 2500,
+			'posts_per_page'         => 500,
 			'meta_query'             => [
+				'relation' => 'AND',
 				[
 					'key'     => Fields::get_google_place_id_key(),
 					'compare' => 'EXISTS',
+				],
+				[
+					'relation' => 'OR',
+					[
+						'key'     => 'nd_google_reviews_last_updated',
+						'compare' => 'NOT EXISTS', // Check for not set
+					],
+					[
+						'key'     => 'nd_google_reviews_last_updated',
+						'value'   => '',
+						'compare' => '=', // Check for empty
+					],
 				],
 			],
 			'fields'                 => 'ids',
@@ -82,23 +97,50 @@ final class Importer implements Registerable {
 		] );
 
 		if ( empty( $post_ids->posts ) ) {
+			$update_type = 'existing';
+
+			/**
+			 * WP_Query of all post types (IDs only) with non-empty Google Place ID field.
+			 * Gets the less recently updated posts first.
+			 */
+			$post_ids = new \WP_Query( [
+				'post_type'              => $post_types,
+				'posts_per_page'         => 500,
+				'meta_key'               => 'nd_google_reviews_last_updated',
+				'orderby'                => 'meta_value_num',
+				'meta_query'             => [
+					[
+						'key'     => Fields::get_google_place_id_key(),
+						'compare' => 'EXISTS',
+					],
+				],
+				'fields'                 => 'ids',
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false
+			] );
+		}
+
+		if ( empty( $post_ids->posts ) ) {
 			update_field( Settings::STATUS, 'No posts with Google Place IDs found', 'options' );
 
 			return;
 		}
 
-		update_field( Settings::STATUS, 'Import incomplete. Likely because of server timeout, due to too many posts', 'options' );
+		update_field( Settings::STATUS, 'Import of reviews for ' . $post_ids->post_count . ' ' . $update_type . ' posts incomplete. Likely because of server timeout, due to too many posts', 'options' );
 
 		foreach ( $post_ids->posts as $post_id ) {
 			$error_message = $this->update_google_rating_field( $post_id );
 
 			if ( ! empty( $error_message ) ) {
 				update_field( Settings::STATUS, $error_message, 'options' );
+
 				return;
 			}
 		}
 
-		update_field( Settings::STATUS, 'Import complete. Last updated post ID was ' . $post_id, 'options' );
+		$existing_posts_message = 'new' === $update_type ? ' Run again to update existing posts.' : '';
+
+		update_field( Settings::STATUS, 'Import of reviews for ' . $post_ids->post_count . ' ' . $update_type . ' posts complete. Last updated post ID was ' . $post_id . '.' . $existing_posts_message, 'options' );
 	}
 
 	private function update_google_rating_field( int $post_id ): string {
@@ -108,6 +150,8 @@ final class Importer implements Registerable {
 		if ( isset( $response_fields['error_message'] ) ) {
 			return $response_fields['error_message'];
 		}
+
+		update_post_meta( $post_id, Fields::LAST_UPDATED, time() );
 
 		if ( empty( $response_fields ) ) {
 			return $error_message;
