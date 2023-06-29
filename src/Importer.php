@@ -34,7 +34,7 @@ final class Importer implements Registerable {
 		/**
 		 * Only run import on correct settings page.
 		 */
-		if ( false === strpos( $screen->id, Settings::MENU_SLUG ) ) {
+		if ( ! str_contains( $screen->id, Settings::MENU_SLUG ) ) {
 			return;
 		}
 
