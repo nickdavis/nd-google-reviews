@@ -91,7 +91,7 @@ final class View implements Registerable {
 	private function get_reviews( int $post_id ): array {
 		$reviews = get_field( Fields::REVIEWS, $post_id ) ?: [];
 
-		if ( empty( $reviews ) ) {
+		if ( ! is_array( $reviews ) || empty( $reviews ) ) {
 			return [];
 		}
 
