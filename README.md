@@ -24,6 +24,9 @@ This plugin is designed for developers who want to use as a basis for their own 
 
 ## Changelog
 
+### 1.1.0 (2023-07-04)
+- Add Review schema support (requires the Yoast SEO plugin)
+
 ### 1.0.3 (2023-06-30)
 - Fix critical error if array not returned
 - Skip abandoning import when Place ID is not valid
