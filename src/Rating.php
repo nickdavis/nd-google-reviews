@@ -28,6 +28,10 @@ final class Rating implements ValueObject {
 		return 0.0 !== $this->rating;
 	}
 
+	public function is_at_least( float $min ): bool {
+		return $this->rating >= $min;
+	}
+
 	public function rounded(): int {
 		return (int) round( $this->rating );
 	}

@@ -53,8 +53,8 @@ final class Review implements ValueObject {
 		return $this->review['author_name'];
 	}
 
-	public function get_rating(): string {
-		return $this->review['rating'];
+	public function get_rating(): Rating {
+		return new Rating( (float) $this->review['rating'] ?: 0.0 );
 	}
 
 	public function get_text(): string {

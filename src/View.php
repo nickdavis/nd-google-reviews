@@ -71,7 +71,8 @@ final class View implements Registerable {
 			return [];
 		}
 
-		if ( $args['rating']->rounded() < 4 ) {
+		// TODO: Remove hard coded minimum rating.
+		if ( ! $args['rating']->is_at_least( 4.0 ) ) {
 			return [];
 		}
 

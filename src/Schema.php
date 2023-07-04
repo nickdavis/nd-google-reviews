@@ -26,15 +26,7 @@ final class Schema implements Registerable {
 			return $pieces;
 		}
 
-		$reviews = $reviews_post->get_reviews();
-
-		if ( empty( $reviews ) ) {
-			return $pieces;
-		}
-
-		foreach ( $reviews as $review ) {
-			$pieces[] = new ReviewSchemaPiece( $review, $context );
-		}
+		$pieces[] = new ReviewSchemaPiece( $reviews_post, $context );
 
 		return $pieces;
 	}

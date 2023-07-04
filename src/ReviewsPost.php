@@ -22,6 +22,10 @@ final class ReviewsPost {
 		$this->post = $post;
 	}
 
+	public function get_post_type(): string {
+		return $this->post->post_type;
+	}
+
 	public function get_rating(): Rating {
 		return new Rating( (float) get_post_meta( $this->post->ID, Fields::RATING, true ) ?: 0.0 );
 	}
@@ -42,7 +46,8 @@ final class ReviewsPost {
 		}, $reviews );
 
 		return array_filter( $reviews, function ( Review $review ) {
-			return $review->get_rating() >= 4;
+			// TODO: Remove hard coded minimum rating.
+			return $review->get_rating()->is_at_least( 4.0 );
 		} );
 	}
 
