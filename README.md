@@ -24,8 +24,8 @@ This plugin is designed for developers who want to use as a basis for their own 
 
 ## Changelog
 
-### 1.1.0 (2023-07-04)
-- Add Review schema support (requires the Yoast SEO plugin)
+### 2.0.0 (2023-07-04)
+- Fix only one review showing in schema + (breaking) refactor
 
 ### 1.0.3 (2023-06-30)
 - Fix critical error if array not returned
