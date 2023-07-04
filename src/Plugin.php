@@ -25,6 +25,7 @@ final class Plugin {
 		Fields::class,
 		Importer::class,
 		Settings::class,
+		Schema::class,
 		View::class,
 	];
 }
