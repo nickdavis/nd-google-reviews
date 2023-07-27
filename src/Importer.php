@@ -129,6 +129,16 @@ final class Importer implements Registerable {
 		update_field( Settings::STATUS, 'Import of reviews for ' . $post_ids->post_count . ' ' . $update_type . ' posts incomplete. Likely because of server timeout, due to too many posts', 'options' );
 
 		foreach ( $post_ids->posts as $post_id ) {
+			/**
+			 * Check that Google Place ID field is not set, but empty to stop whole import
+			 * failing due to 'Missing the placeid or reference parameter' error from Google.
+			 */
+			$google_place_id_field = get_post_meta( $post_id, Fields::get_google_place_id_key(), true );
+
+			if ( empty( $google_place_id_field ) ) {
+				continue;
+			}
+
 			$error_message = $this->update_google_rating_field( $post_id );
 
 			if ( ! empty( $error_message ) ) {
