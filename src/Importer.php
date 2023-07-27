@@ -79,6 +79,11 @@ final class Importer implements Registerable {
 					'compare' => 'EXISTS',
 				],
 				[
+					'key'     => Fields::get_google_place_id_key(),
+					'value'   => '',
+					'compare' => '!=', // Check for empty
+				],
+				[
 					'relation' => 'OR',
 					[
 						'key'     => 'nd_google_reviews_last_updated',
@@ -136,6 +141,12 @@ final class Importer implements Registerable {
 			$google_place_id_field = get_post_meta( $post_id, Fields::get_google_place_id_key(), true );
 
 			if ( empty( $google_place_id_field ) ) {
+				/**
+				 * Update Last Updated time, even though not found, to avoid infinite
+				 * 'new posts' loop.
+				 */
+				update_post_meta( $post_id, Fields::LAST_UPDATED, time() );
+
 				continue;
 			}
 
@@ -217,7 +228,7 @@ final class Importer implements Registerable {
 		// Response status will be 'OK', if able to geocode given address.
 		if ( 'OK' !== $resp['status'] ) {
 			// TODO: Save this error message to the post meta.
-			if ( str_contains( $resp['error_message' ], 'The provided Place ID is no longer valid' ) ) {
+			if ( str_contains( $resp['error_message'], 'The provided Place ID is no longer valid' ) ) {
 				return [];
 			}
 
