@@ -51,6 +51,20 @@ final class ReviewsPost {
 		} );
 	}
 
+	public function get_reviews_with_text(): array {
+		$reviews = $this->get_reviews();
+
+		if ( empty( $reviews ) ) {
+			return [];
+		}
+
+		return array_filter( $reviews, function ( Review $review ) {
+			if ( ! empty( $review->get_text() ) ) {
+				return $review;
+			}
+		} );
+	}
+
 	public function get_title(): string {
 		return $this->post->post_title;
 	}

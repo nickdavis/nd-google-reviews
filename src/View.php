@@ -76,8 +76,9 @@ final class View implements Registerable {
 			return [];
 		}
 
-		$args['review_count'] = $post->get_review_count();
-		$args['reviews']      = $post->get_reviews();
+		$args['review_count']      = $post->get_review_count();
+		$args['reviews']           = $post->get_reviews();
+		$args['reviews_with_text'] = $post->get_reviews_with_text();
 
 		return $args;
 	}
