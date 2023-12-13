@@ -3,7 +3,7 @@
  * Plugin Name: ND Google Reviews
  * Plugin URI: https://github.com/nickdavis/nd-google-reviews/
  * Description: Add Google Reviews to any WordPress post type.
- * Version: 2.1.0
+ * Version: 2.2.0
  * Author: Nick Davis
  * Author URI: https://nickdavis.io
  *

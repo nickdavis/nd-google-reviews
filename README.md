@@ -24,6 +24,9 @@ This plugin is designed for developers who want to use as a basis for their own 
 
 ## Changelog
 
+### 2.2.0 (2023-12-13)
+- Add `nd_google_reviews_disable_reviews_schema` filter to allow reviews schema to be disabled and only show aggregate rating
+
 ### 2.0.0 (2023-07-04)
 - Fix only one review showing in schema + (breaking) refactor
 
