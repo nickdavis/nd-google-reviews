@@ -56,6 +56,12 @@ final class ReviewSchemaPiece extends Abstract_Schema_Piece {
 			]
 		];
 
+		$disable_reviews_schema = apply_filters( 'nd_google_reviews_disable_reviews_schema', false );
+
+		if ( $disable_reviews_schema ) {
+			return $data;
+		}
+
 		if ( empty( $this->reviews_post->get_reviews() ) ) {
 			return $data;
 		}
