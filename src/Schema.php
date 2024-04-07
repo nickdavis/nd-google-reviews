@@ -16,19 +16,86 @@ final class Schema implements Registerable {
 	private ?ReviewsPost $reviews_post = null;
 
 	public function register(): void {
-		add_filter( 'wpseo_schema_graph_pieces', [ $this, 'add_review_schema' ], 10, 2 );
+		add_filter( 'wpseo_schema_graph', [ $this, 'add_review_schema' ], 100, 2 );
 	}
 
-	public function add_review_schema( $pieces, $context ) {
-		$reviews_post = $this->get_reviews_post();
+	public function add_review_schema( $data, $context ) {
+		$main_entity_key = null;
 
-		if ( null === $reviews_post ) {
-			return $pieces;
+		// Find the main entity key.
+		foreach ( $data as $key => $data_item ) {
+			if ( ! isset( $data_item['mainEntityOfPage'] ) ) {
+				continue;
+			}
+
+			$main_entity_key = $key;
 		}
 
-		$pieces[] = new ReviewSchemaPiece( $reviews_post, $context );
+		if ( null === $main_entity_key ) {
+			return $data;
+		}
 
-		return $pieces;
+		$this->get_reviews_post();
+
+		if ( ! in_array( $this->reviews_post->get_post_type(), Settings::get_post_types() ) ) {
+			return $data;
+		}
+
+		if ( null === $this->reviews_post ) {
+			return $data;
+		}
+
+		if ( ! $this->reviews_post->get_rating()->has() ) {
+			return $data;
+		}
+
+		// TODO: Remove hard coded minimum rating.
+		if ( ! $this->reviews_post->get_rating()->is_at_least( 4.0 ) ) {
+			return $data;
+		}
+
+		// RATING!
+
+		$data[ $main_entity_key ]['aggregateRating'] = [
+			'@type'       => 'AggregateRating',
+			'ratingValue' => $this->reviews_post->get_rating()->decimal(),
+			'reviewCount' => $this->reviews_post->get_review_count(),
+		];
+
+		// REVIEWS!
+
+		$disable_reviews_schema = apply_filters( 'nd_google_reviews_disable_reviews_schema', false );
+
+		if ( $disable_reviews_schema ) {
+			return $data;
+		}
+
+		if ( empty( $this->reviews_post->get_reviews() ) ) {
+			return $data;
+		}
+
+		$review_schema_pieces = [];
+
+		foreach ( $this->reviews_post->get_reviews() as $review ) {
+			$review_schema_pieces[] = [
+				'@type'         => 'Review',
+				'datePublished' => $review->get_date_schema(),
+				'reviewRating'  => [
+					'@type'       => 'Rating',
+					'ratingValue' => $review->get_rating()->rounded(),
+				],
+				'author'        => [
+					'@type' => 'Person',
+					'name'  => $review->get_name(),
+				],
+				'reviewBody'    => $review->get_text(),
+				'itemReviewed'  => $this->reviews_post->get_title()
+			];
+		}
+
+		$data[ $main_entity_key ]['review'] = $review_schema_pieces;
+
+		return $data;
 	}
 
 	// TODO: Reduce duplication with View class.
