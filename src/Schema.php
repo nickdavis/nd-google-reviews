@@ -20,6 +20,12 @@ final class Schema implements Registerable {
 	}
 
 	public function add_review_schema( $data, $context ) {
+		$disable_schema = apply_filters( 'nd_google_reviews_disable_schema', false );
+
+		if ( $disable_schema ) {
+			return $data;
+		}
+
 		$main_entity_key = null;
 
 		// Find the main entity key.
